@@ -1,60 +1,61 @@
 name: Notificar PR a Discord
 
 on:
-    pull_request:
-        types: [opened]
+  pull_request:
+    types: [opened]
 
 jobs:
-    notify:
-        runs_on: ubuntu-latest
-        if: github.event.pull_request.base.ref == 'main'
+  notify:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.base.ref == 'main'
 
-        steps:
-            - name: Obtener detalle del PR
-             id: pr_data
-             run: |
-                echo "PR_TITLE=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
-                echo "PR_BODY=${{ github.event.pull_request.body }}" >> $GITHUB_ENV
-                echo "PR_AUTHOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
-                echo "PR_URL=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
-                echo "PR_BASE=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
-                echo "PR_HEAD=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
-                echo "ADDITIONS=${{ github.event.pull_request.additions }}" >> $GITHUB_ENV
-                echo "DELETIONS=${{ github.event.pull_request.deletions }}" >> $GITHUB_ENV
-                echo "CHANGE_FILES=${{ github.event.pull_request.changed_files }}" >> $GITHUB_ENV
-                echo "USER_AVATAR=${{ github.event.pull_request.user.avatar_url }}" >> $GITHUB_ENV
-                echo "CREATED_AT=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
+    steps:
+      - name: Obtener detalle del PR
+        id: pr_data
+        run: |
+          echo "PR_TITLE=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
+          echo "PR_BODY=${{ github.event.pull_request.body }}" >> $GITHUB_ENV
+          echo "PR_AUTHOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
+          echo "PR_URL=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
+          echo "PR_BASE=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
+          echo "PR_HEAD=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
+          echo "ADDITIONS=${{ github.event.pull_request.additions }}" >> $GITHUB_ENV
+          echo "DELETIONS=${{ github.event.pull_request.deletions }}" >> $GITHUB_ENV
+          echo "CHANGE_FILES=${{ github.event.pull_request.changed_files }}" >> $GITHUB_ENV
+          echo "USER_AVATAR=${{ github.event.pull_request.user.avatar_url }}" >> $GITHUB_ENV
+          echo "CREATED_AT=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
 
-            - name: Enviar mensaje a Discord
-              env:
-                DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-              run: |
-                curl -H "Content-Type: application/json" \
-                -X POST \
-                -d '
-                {
-                    "embed": {
-                        "title": "🚀 New PR: '"${PR_TITLE}"'",
-                        "description": "${PR_BODY}",
-                        "url": "{{PR_URL}}",
-                        "color": 65350,
-                        "timestamp": "${CREATED_AT}",
-                        "footer": {
-                            "icon_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
-                            "text": "Github"
-                        },
-                        "thumbnail": {
-                            "url": "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZW5wZ3VnejFwbTFhNXE3NmY1MHF1bHZkNThsYnNkazE1MzRidjJlNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/a5viI92PAF89q/giphy.gif"
-                        },
-                        "author": {
-                            "name": "${PR_AUTHOR}",
-                            "icon_url": "${USER_AVATAR}",
-                        },
-                        "fields": [
-                        {
-                            "name": "Summary",
-                            "value": "``` 🌱 ${PR_HEAD} >> 🌳 ${PR_BASE} \n ➕ Lines added: ${ADDITIONS} \n ➖ Lines removed: ${DELETIONS}   \n 📝 Files changed: ${CHANGE_FILES} ```"
-                        }
-                        ]
-                    }
-                }' $DISCORD_WEBHOOK_URL
+      - name: Enviar mensaje a Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{
+            "embeds": [
+              {
+                "title": "🚀 New PR: '"${PR_TITLE}"'",
+                "description": "'"${PR_BODY}"'",
+                "url": "'"${PR_URL}"'",
+                "color": 65350,
+                "timestamp": "'"${CREATED_AT}"'",
+                "footer": {
+                  "icon_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+                  "text": "Github"
+                },
+                "thumbnail": {
+                  "url": "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZW5wZ3VnejFwbTFhNXE3NmY1MHF1bHZkNThsYnNkazE1MzRidjJlNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/a5viI92PAF89q/giphy.gif"
+                },
+                "author": {
+                  "name": "'"${PR_AUTHOR}"'",
+                  "icon_url": "'"${USER_AVATAR}"'"
+                },
+                "fields": [
+                  {
+                    "name": "Summary",
+                    "value": "``` 🌱 ${PR_HEAD} >> 🌳 ${PR_BASE} \n ➕ Lines added: ${ADDITIONS} \n ➖ Lines removed: ${DELETIONS} \n 📝 Files changed: ${CHANGE_FILES} ```"
+                  }
+                ]
+              }
+            ]
+          }' $DISCORD_WEBHOOK_URL
