@@ -34,11 +34,11 @@ jobs:
           -d '{
             "embeds": [
               {
-                "title": "🚀 New PR: '"${PR_TITLE}"'",
-                "description": "'"${PR_BODY}"'",
-                "url": "'"${PR_URL}"'",
+                "title": "🚀 New PR: '"$PR_TITLE"'",
+                "description": "'"$PR_BODY"'",
+                "url": "'"$PR_URL"'",
                 "color": 65350,
-                "timestamp": "'"${CREATED_AT}"'",
+                "timestamp": "'"$CREATED_AT"'",
                 "footer": {
                   "icon_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
                   "text": "Github"
@@ -47,13 +47,13 @@ jobs:
                   "url": "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZW5wZ3VnejFwbTFhNXE3NmY1MHF1bHZkNThsYnNkazE1MzRidjJlNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/a5viI92PAF89q/giphy.gif"
                 },
                 "author": {
-                  "name": "'"${PR_AUTHOR}"'",
-                  "icon_url": "'"${USER_AVATAR}"'"
+                  "name": "'"$PR_AUTHOR"'",
+                  "icon_url": "'"$USER_AVATAR"'"
                 },
                 "fields": [
                   {
                     "name": "Summary",
-                    "value": "``` 🌱 ${PR_HEAD} >> 🌳 ${PR_BASE} \n ➕ Lines added: ${ADDITIONS} \n ➖ Lines removed: ${DELETIONS} \n 📝 Files changed: ${CHANGE_FILES} ```"
+                    "value": "``` 🌱 $PR_HEAD >> 🌳 $PR_BASE \n ➕ Lines added: $ADDITIONS \n ➖ Lines removed: $DELETIONS \n 📝 Files changed: $CHANGE_FILES ```"
                   }
                 ]
               }
