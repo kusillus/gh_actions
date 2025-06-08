@@ -3,6 +3,7 @@ name: Notificar PR a Discord
 on:
   pull_request:
     types: [opened]
+  workflow_dispatch:
 
 jobs:
   notify:
@@ -24,6 +25,9 @@ jobs:
           echo "CHANGE_FILES=${{ github.event.pull_request.changed_files }}" >> $GITHUB_ENV
           echo "USER_AVATAR=${{ github.event.pull_request.user.avatar_url }}" >> $GITHUB_ENV
           echo "CREATED_AT=${{ github.event.pull_request.created_at }}" >> $GITHUB_ENV
+
+      - name: Dump event context
+        run: echo "${{ toJson(github.event) }}"
 
       - name: Enviar mensaje a Discord
         env:
