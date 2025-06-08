@@ -55,7 +55,7 @@ jobs:
                 "fields": [
                   {
                     "name": "Summary",
-                    "value": " 🌱 $PR_HEAD >> 🌳 $PR_BASE \n ➕ Lines added: $ADDITIONS \n ➖ Lines removed: $DELETIONS \n 📝 Files changed: $CHANGE_FILES"
+                    "value": "'"🌱 $PR_HEAD >> 🌳 $PR_BASE \n ➕ Lines added: $ADDITIONS \n ➖ Lines removed: $DELETIONS \n 📝 Files changed: $CHANGE_FILES"'"
                   }
                 ]
               }
