@@ -1,0 +1,32 @@
+name: Notificar a Discord sobre el PR
+
+on:
+    pull_request:
+        types: [opened]
+
+jobs:
+    notify:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Enviar mensaje a discord
+              env:
+                DISCORD_WEBHOOK_URL: ${secrets.DISCORD_WEBHOOK_URL}
+                PR_TITLE: ${github.event.pull_request.title}
+                PR_AUTHOR: ${github.event.pull_request.user.login}
+                PR_URL: ${github.event.pull_request.html_url}
+                PR_BASE: ${github.event.pull_request.base.ref}
+                PR_HEAD: ${github.event.pull_request.head.ref}
+              run: |
+                curl -H "Content-Type: application/json" \
+                -X POST \
+                -d '{
+                    "username": "GitHub PR Bot",
+                    "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+                    "embeds": [{
+                        "title": "Nuevo Pull Request: '"$PR_TITLE"'",
+                        "description": "**Autor:** '"$PR_AUTHOR"' \n**De:** '"$PR_HEAD"' → **A:** '"$PR_BASE"'",
+                        "url": "'"$PR_URL"'",
+                        "color": 5814783
+                    }]
+                }' $DISCORD_WEBHOOK_URL
+                
