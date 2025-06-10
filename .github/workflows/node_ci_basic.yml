@@ -1,0 +1,22 @@
+name: Node CI Básico
+
+on: [push]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Clonarlcodigo
+              uses: actions/checkout@v4
+            
+            - name: Instalar node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: '20'
+
+            - name: Instalar dependencias
+              run: npm install
+
+            - name: Ejecutar script
+              run: npm run build
